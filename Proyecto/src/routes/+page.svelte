@@ -27,7 +27,7 @@
     
     <div class="w-1/2 p-4">
         <h2 class="text-lg font-bold mb-2">Editor</h2>
-        <div class="rounded-md border border-gray-300 shadow-md relative h-full">
+        <div class="rounded-md border border-gray-300 shadow-md relative h-full overflow-auto">
             <CodeMirror 
                 bind:value={editorText} 
                 on:change={parse} 
