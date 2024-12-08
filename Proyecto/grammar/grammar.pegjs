@@ -1,35 +1,25 @@
-// Simple Arithmetics Grammar
-// ==========================
-//
-// Accepts expressions like "2 * (3 + 4)" and computes their value.
 
-Calculator
-  = head:Expression tail:( "\n" @Expression )* {
-    return [head, ...tail]
-  }
+//DEFININIEDO ESPACIOS EN BLANCO, COMENTARIOS ESCAPES Y RANGOS
 
-Expression
-  = head:Term tail:(_ ("+" / "-") _ Term)* {
-      return tail.reduce(function(result, element) {
-        if (element[1] === "+") { return result + element[3]; }
-        if (element[1] === "-") { return result - element[3]; }
-      }, head);
-    }
+range   =  '[' (! ']' input_range)* ']' __
 
-Term
-  = head:Factor tail:(_ ("*" / "/") _ Factor)* {
-      return tail.reduce(function(result, element) {
-        if (element[1] === "*") { return result * element[3]; }
-        if (element[1] === "/") { return result / element[3]; }
-      }, head);
-    }
+input_range   = scape
+              / Char '-' Char 
+              / Char
 
-Factor
-  = "(" _ @Expression _ ")"
-  / Integer
 
-Integer "integer"
-  = _ [0-9]+ { return parseInt(text(), 10); }
+scape =  "\\" Char
+Char           = ![\r\n] . 
+ASSIGN   = '=' __
+SLASH    = '/' __
+QUESTION = '?' __
+STAR     = '*' __
+PLUS     = '+' __
+OPEN     = '(' __
+CLOSE    = ')' __
+SEMI     = ';' __
 
-_ "whitespace"
-  = [ \t\n\r]*
+__ "whitespace" = (Space / Comment)*
+
+Space          = [ \t\r\n]+
+Comment        = '#' (![\r\n] .)*  /  '//' (![\r\n] .)*
