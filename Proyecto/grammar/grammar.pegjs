@@ -1,11 +1,26 @@
+//DEFINIENDO LAS PRODUCCIONES Y LA GRAMATICA
+
+grammar 
+  = __ (production __)+
+
+production 
+  = ID ASSIGN expression SEMI?
+
+expression 
+  = concatenation (SLASH concatenation)*
+
+concatenation
+  = element+
+
+element
+  = parsing_expression (QUESTION / STAR / PLUS)?
+
 //DEFINIENDO EXPRESIONES DE PARSEO
 
-expression = parsing_expression +
-
 parsing_expression
-  = ID !ASSIGN //si o si
+  = ID !ASSIGN 
   / paren_exp
-  / Literal // si o si
+  / Literal 
   / range
   
 paren_exp = OPEN expression CLOSE
