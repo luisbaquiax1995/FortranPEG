@@ -1,0 +1,21 @@
+start = rule  
+
+rule = 
+	id equal (concatenation) semicolon?
+
+concatenation =
+	expression (_ expression)*
+
+expression = 
+	id
+    
+id = [a-z]i[a-z0-9]i* _
+
+equal = "="
+pareno = "("
+parenc = ")"
+plus = "+"
+kleane = "*"
+semicolon = ";"
+
+_ "white_espace" = [ \n\t\r]+
