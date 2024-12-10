@@ -1,56 +1,52 @@
-//DEFINIENDO LAS PRODUCCIONES Y LA GRAMATICA
+// Simple PEG Grammar
+// ==========================
 
-grammar 
-  = __ (production __)+
+Grammar 
+  = __ (Production __)+
 
-production 
-  = ID ASSIGN expression SEMI?
+Production 
+  = ID ASSIGN Expression SEMI?
 
-expression 
-  = concatenation (SLASH concatenation)*
+Expression 
+  = Case (SLASH Case)*
 
-concatenation
-  = element+
+Case
+  = Section+
 
-element
-  = parsing_expression (QUESTION / STAR / PLUS)?
+Section
+  = (AND / NOT)? Element
 
-//DEFINIENDO EXPRESIONES DE PARSEO
+Element
+  = Primary (QUESTION / STAR / PLUS)?
 
-parsing_expression
-  = ID !ASSIGN 
-  / paren_exp
-  / Literal 
-  / range
-  
-paren_exp = OPEN expression CLOSE
+Primary
+  = ID !ASSIGN / OPEN Expression CLOSE / Literal / Class / DOT
 
+// Literales y Clases
 ID      = [a-zA-Z_] [a-zA-Z0-9_]* __
+Literal = ['] (!['] Char)* ['] __
+        / ["] (!["] Char)* ["] __
+Class   = '[' (!']' Range)* ']' __
+Range   = Char '-' Char / Char
 
-Literal =  ['] (!['] ( ![\\] Char / scape))* ['] __
-        / ["] (!["] ( ![\\] Char / scape))* ["] __
-
-//DEFININIEDO ESPACIOS EN BLANCO, COMENTARIOS ESCAPES Y RANGOS
-
-range   =  '[' (! ']' input_range)* ']' __
-
-input_range   = scape
-              / Char '-' Char 
-              / Char
-
-
-scape =  "\\" Char
-Char           = ![\r\n] . 
+// Operadores y paréntesis
 ASSIGN   = '=' __
 SLASH    = '/' __
+AND      = '&' __
+NOT      = '!' __
 QUESTION = '?' __
 STAR     = '*' __
 PLUS     = '+' __
 OPEN     = '(' __
 CLOSE    = ')' __
-SEMI     = ';' __
+DOT      = '.' __
+SEMI     = ';' __ 
 
+// Espaciado y comentarios
 __ "whitespace" = (Space / Comment)*
-
 Space          = [ \t\r\n]+
 Comment        = '#' (![\r\n] .)*  /  '//' (![\r\n] .)*
+
+// Caracteres Unicode válidos
+Char           = ![\r\n] .  //falta arreglar
+
