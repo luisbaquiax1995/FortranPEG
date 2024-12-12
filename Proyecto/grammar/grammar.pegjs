@@ -4,13 +4,13 @@ grammar
   = __ (production __)+
 
 production 
-  = ID ASSIGN expression SEMI?
+  = ID (Literal __)? ASSIGN expression SEMI?
 
 expression 
   = concatenation (SLASH concatenation)*
 
 concatenation
-  = element+
+  = (label? element)+
 
 element
   = modifications? parsing_expression (counters/quantifier)? 
@@ -18,7 +18,7 @@ element
 //DEFINIENDO EXPRESIONES DE PARSEO
 
 parsing_expression
-  = ID !ASSIGN 
+  = ID !(Literal? __ ASSIGN) 
   / paren_exp
   / Literal INSENSITIVE?  __ //agregando INSENSITIVE
   / range INSENSITIVE? __ //agregando INSENSITIVE
@@ -26,6 +26,8 @@ parsing_expression
   / FULLSTOP //agregar FULLSTOP
   
 paren_exp = OPEN expression CLOSE
+
+label = '@'?(ID ':'__)?
 
 ID      = [a-zA-Z_] [a-zA-Z0-9_]* __
 
